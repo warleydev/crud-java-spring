@@ -5,6 +5,7 @@ import com.warleydev.desafionelio.repositories.ClientRepository;
 import com.warleydev.desafionelio.services.exceptions.InvalidCpfException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 import com.warleydev.desafionelio.utils.IsCPF;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,11 +37,20 @@ public class ClientService {
         }
     }
 
+    public Client update(Long id, Client updatedClient){
+        if (repository.existsById(id)){
+
+            updatedClient.setId(id);
+            updatedClient = repository.save(updatedClient);
+            return updatedClient;
+        }
+        else throw new ResourceNotFoundException("Id "+id+" não encontrado");
+    }
+
     public void deleteById(Long id){
         if (repository.existsById(id)){
             repository.deleteById(id);
         }
         else throw new ResourceNotFoundException("Id "+id+" não encontrado!");
     }
-
 }
