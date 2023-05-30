@@ -1,5 +1,6 @@
 package com.warleydev.desafionelio.controllers.exceptions;
 
+import com.warleydev.desafionelio.services.exceptions.InvalidCpfException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,17 @@ public class ResourceExceptionHandler {
         err.setTimestamp(Instant.now());
         err.setStatus(HttpStatus.NOT_FOUND.value());
         err.setError("Objeto não encontrado!");
+        err.setPath(request.getRequestURI());
+        err.setMessage(e.getMessage());
+        return ResponseEntity.status(err.getStatus()).body(err);
+    }
+
+    @ExceptionHandler(InvalidCpfException.class)
+    public ResponseEntity<StandardError> invalidCpf(InvalidCpfException e, HttpServletRequest request){
+        StandardError err = new StandardError();
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setError("CPF informado é inválido!");
         err.setPath(request.getRequestURI());
         err.setMessage(e.getMessage());
         return ResponseEntity.status(err.getStatus()).body(err);

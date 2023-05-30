@@ -2,6 +2,7 @@ package com.warleydev.desafionelio.services;
 
 import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.repositories.ClientRepository;
+import com.warleydev.desafionelio.services.exceptions.InvalidCpfException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 import com.warleydev.desafionelio.utils.IsCPF;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,15 @@ public class ClientService {
             return repository.save(client);
         }
         else {
-            throw new ResourceNotFoundException("CPF inválido!");
+            throw new InvalidCpfException("CPF inválido!");
         }
     }
 
-    /*public Client deleteById(Long id){
-
-    }*/
+    public void deleteById(Long id){
+        if (repository.existsById(id)){
+            repository.deleteById(id);
+        }
+        else throw new ResourceNotFoundException("Id "+id+" não encontrado!");
+    }
 
 }
