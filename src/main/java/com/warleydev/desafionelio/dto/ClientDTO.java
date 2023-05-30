@@ -1,16 +1,10 @@
-package com.warleydev.desafionelio.entities;
+package com.warleydev.desafionelio.dto;
 
-import jakarta.persistence.*;
+import com.warleydev.desafionelio.entities.Client;
 
 import java.time.Instant;
-import java.util.Objects;
 
-@Entity
-@Table(name = "tb_client")
-public class Client {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ClientDTO {
     private Long id;
     private String name;
     private String cpf;
@@ -18,16 +12,25 @@ public class Client {
     private Instant birthDate;
     private Integer children;
 
-    public Client(){
+    public ClientDTO(){
     }
 
-    public Client(Long id, String name, String cpf, Double income, Instant birthDate, Integer children) {
+    public ClientDTO(Long id, String name, String cpf, Double income, Instant birthDate, Integer children) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
         this.income = income;
         this.birthDate = birthDate;
         this.children = children;
+    }
+
+    public ClientDTO(Client client){
+        id = client.getId();
+        name = client.getName();
+        cpf = client.getCpf();
+        income = client.getIncome();
+        birthDate = client.getBirthDate();
+        children = client.getChildren();
     }
 
     public Long getId() {
@@ -76,18 +79,5 @@ public class Client {
 
     public void setChildren(Integer children) {
         this.children = children;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Client client = (Client) o;
-        return Objects.equals(id, client.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }
