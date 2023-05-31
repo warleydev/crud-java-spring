@@ -3,7 +3,9 @@ package com.warleydev.desafionelio.entities;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_client")
@@ -17,6 +19,9 @@ public class Client {
     private Double income;
     private Instant birthDate;
     private Integer children;
+
+    @OneToMany(mappedBy = "owner")
+    private Set<Vehicle> vehicles = new HashSet<>();
 
     public Client(){
     }
@@ -76,6 +81,10 @@ public class Client {
 
     public void setChildren(Integer children) {
         this.children = children;
+    }
+
+    public Set<Vehicle> getVehicles() {
+        return vehicles;
     }
 
     @Override

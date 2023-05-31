@@ -3,6 +3,8 @@ package com.warleydev.desafionelio.dto;
 import com.warleydev.desafionelio.entities.Client;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ClientDTO {
     private Long id;
@@ -11,6 +13,8 @@ public class ClientDTO {
     private Double income;
     private Instant birthDate;
     private Integer children;
+
+    private Set<VehicleDTO> vehicles = new HashSet<>();
 
     public ClientDTO(){
     }
@@ -80,4 +84,9 @@ public class ClientDTO {
     public void setChildren(Integer children) {
         this.children = children;
     }
+
+    public Set<VehicleDTO> getVehicles() {
+        return vehicles;
+    }
+
 }

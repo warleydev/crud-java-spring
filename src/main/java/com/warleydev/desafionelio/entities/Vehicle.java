@@ -2,6 +2,7 @@ package com.warleydev.desafionelio.entities;
 
 import com.warleydev.desafionelio.entities.enums.Color;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 
