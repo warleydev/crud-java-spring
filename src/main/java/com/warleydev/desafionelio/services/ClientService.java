@@ -6,7 +6,6 @@ import com.warleydev.desafionelio.services.exceptions.InvalidCpfException;
 import com.warleydev.desafionelio.services.exceptions.NullOrEmptyFieldException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 import com.warleydev.desafionelio.utils.IsCPF;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
