@@ -3,6 +3,7 @@ package com.warleydev.desafionelio.services;
 import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.repositories.ClientRepository;
 import com.warleydev.desafionelio.services.exceptions.InvalidCpfException;
+import com.warleydev.desafionelio.services.exceptions.NullOrEmptyFieldException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 import com.warleydev.desafionelio.utils.IsCPF;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,6 +30,9 @@ public class ClientService {
     }
 
     public Client insert(Client client){
+        if (clientValidate(client)){
+            throw new NullOrEmptyFieldException("Preencha todos os campos!");
+        }
         if (IsCPF.isValidcpf(client.getCpf())){
             return repository.save(client);
         }
@@ -39,7 +43,6 @@ public class ClientService {
 
     public Client update(Long id, Client updatedClient){
         if (repository.existsById(id)){
-
             updatedClient.setId(id);
             updatedClient = repository.save(updatedClient);
             return updatedClient;
@@ -52,5 +55,13 @@ public class ClientService {
             repository.deleteById(id);
         }
         else throw new ResourceNotFoundException("Id "+id+" não encontrado!");
+    }
+
+    public boolean clientValidate(Client client){
+        if (client.getName() == null || client.getName() == "" || client.getBirthDate() == null ||
+        client.getChildren() == null || client.getIncome() == null){
+            return true;
+        }
+        return false;
     }
 }

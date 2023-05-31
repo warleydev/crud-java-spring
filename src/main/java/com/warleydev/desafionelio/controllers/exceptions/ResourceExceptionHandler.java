@@ -1,6 +1,7 @@
 package com.warleydev.desafionelio.controllers.exceptions;
 
 import com.warleydev.desafionelio.services.exceptions.InvalidCpfException;
+import com.warleydev.desafionelio.services.exceptions.NullOrEmptyFieldException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,16 @@ public class ResourceExceptionHandler {
         err.setTimestamp(Instant.now());
         err.setStatus(HttpStatus.BAD_REQUEST.value());
         err.setError("CPF informado é inválido!");
+        err.setPath(request.getRequestURI());
+        err.setMessage(e.getMessage());
+        return ResponseEntity.status(err.getStatus()).body(err);
+    }
+    @ExceptionHandler(NullOrEmptyFieldException.class)
+    public ResponseEntity<StandardError> emptyOrNullField(NullOrEmptyFieldException e, HttpServletRequest request){
+        StandardError err = new StandardError();
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setError("Você precisa preencher todos os dados!");
         err.setPath(request.getRequestURI());
         err.setMessage(e.getMessage());
         return ResponseEntity.status(err.getStatus()).body(err);
