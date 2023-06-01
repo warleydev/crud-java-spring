@@ -1,9 +1,6 @@
 package com.warleydev.desafionelio.controllers.exceptions;
 
-import com.warleydev.desafionelio.services.exceptions.InvalidCpfException;
-import com.warleydev.desafionelio.services.exceptions.NullOrEmptyFieldException;
-import com.warleydev.desafionelio.services.exceptions.OwnerNotFoundException;
-import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
+import com.warleydev.desafionelio.services.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,12 +43,13 @@ public class ResourceExceptionHandler {
         err.setMessage(e.getMessage());
         return ResponseEntity.status(err.getStatus()).body(err);
     }
-    @ExceptionHandler(OwnerNotFoundException.class)
-    public ResponseEntity<StandardError> ownerlessVehicle(OwnerNotFoundException e, HttpServletRequest request){
+
+    @ExceptionHandler(InvalidLicensePlateException.class)
+    public ResponseEntity<StandardError> invalidCpf(InvalidLicensePlateException e, HttpServletRequest request){
         StandardError err = new StandardError();
         err.setTimestamp(Instant.now());
         err.setStatus(HttpStatus.BAD_REQUEST.value());
-        err.setError("Um veículo precisa de um dono!");
+        err.setError("A Placa informada é inválida!");
         err.setPath(request.getRequestURI());
         err.setMessage(e.getMessage());
         return ResponseEntity.status(err.getStatus()).body(err);

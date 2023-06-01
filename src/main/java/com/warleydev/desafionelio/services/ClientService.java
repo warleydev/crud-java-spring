@@ -30,14 +30,9 @@ public class ClientService {
 
     public Client insert(Client client){
         if (clientValidate(client)){
-            throw new NullOrEmptyFieldException("Preencha todos os campos!");
-        }
-        if (IsCPF.isValidcpf(client.getCpf())){
             return repository.save(client);
         }
-        else {
-            throw new InvalidCpfException("CPF inválido!");
-        }
+        return null;
     }
 
     public Client update(Long id, Client updatedClient){
@@ -58,9 +53,24 @@ public class ClientService {
 
     public boolean clientValidate(Client client){
         if (client.getName() == null || client.getName() == "" || client.getBirthDate() == null ||
-        client.getChildren() == null || client.getIncome() == null){
-            return true;
+        client.getChildren() == null || client.getIncome() == null || client.getCpf() == null){
+            throw new NullOrEmptyFieldException("Preencha todos os campos!");
         }
-        return false;
+
+        if (IsCPF.isValidcpf(client.getCpf())){
+            if (cpfAlreadyRegistered(client.getCpf())){
+                throw new InvalidCpfException("CPF '"+client.getCpf()+"' já existe.");
+            }
+            else{
+                return true;
+            }
+        }
+        else {
+            throw new InvalidCpfException("CPF '"+client.getCpf()+"' inválido!");
+        }
+    }
+
+    public boolean cpfAlreadyRegistered(String cpf){
+        return repository.existsByCpf(cpf);
     }
 }
