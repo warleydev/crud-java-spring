@@ -1,5 +1,6 @@
 package com.warleydev.desafionelio.services;
 
+import com.warleydev.desafionelio.dto.ClientDTO;
 import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.repositories.ClientRepository;
 import com.warleydev.desafionelio.services.exceptions.InvalidCpfException;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 public class ClientService {
@@ -37,9 +40,28 @@ public class ClientService {
 
     public Client update(Long id, Client updatedClient){
         if (repository.existsById(id)){
-            updatedClient.setId(id);
-            updatedClient = repository.save(updatedClient);
-            return updatedClient;
+            Client suport = findById(id);
+            if (updatedClient.getCpf() == null){
+                Client provisory = findById(id);
+                updatedClient.setCpf(provisory.getCpf());
+            }
+
+            if (Objects.equals(updatedClient.getCpf(), suport.getCpf())){
+                updatedClient.setId(id);
+                updatedClient = repository.save(updatedClient);
+                return updatedClient;
+            }
+            else if (IsCPF.isValidcpf(updatedClient.getCpf())){
+                if (cpfAlreadyRegistered(updatedClient.getCpf())){
+                    throw new InvalidCpfException("CPF '"+updatedClient.getCpf()+"' já existe.");
+                }
+                else{
+                    updatedClient.setId(id);
+                    updatedClient = repository.save(updatedClient);
+                    return updatedClient;
+                }
+            }
+            throw new InvalidCpfException("CPF '"+updatedClient.getCpf()+"' inválido!");
         }
         else throw new ResourceNotFoundException("Id "+id+" não encontrado");
     }
@@ -73,4 +95,13 @@ public class ClientService {
     public boolean cpfAlreadyRegistered(String cpf){
         return repository.existsByCpf(cpf);
     }
+
+    public void updateData(Client client, Client updatedClient){
+        client.setName(updatedClient.getName());
+        client.setCpf(updatedClient.getCpf());
+        client.setBirthDate(updatedClient.getBirthDate());
+        client.setIncome(updatedClient.getIncome());
+        client.setChildren(updatedClient.getChildren());
+    }
+
 }

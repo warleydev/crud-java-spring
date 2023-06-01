@@ -4,6 +4,9 @@ import java.util.InputMismatchException;
 
 public class IsCPF {
     public static boolean isValidcpf(String cpf){
+        if ( cpf == null){
+            return false;
+        }
         if (cpf.equals("00000000000") ||
                 cpf.equals("11111111111") ||
                 cpf.equals("22222222222") || cpf.equals("33333333333") ||
