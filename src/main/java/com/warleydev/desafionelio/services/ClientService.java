@@ -1,12 +1,11 @@
 package com.warleydev.desafionelio.services;
 
-import com.warleydev.desafionelio.dto.ClientDTO;
 import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.repositories.ClientRepository;
 import com.warleydev.desafionelio.services.exceptions.InvalidCpfException;
-import com.warleydev.desafionelio.services.exceptions.NullOrEmptyFieldException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 import com.warleydev.desafionelio.utils.IsCPF;
+import com.warleydev.desafionelio.utils.NullField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,24 +41,19 @@ public class ClientService {
         if (repository.existsById(id)){
             Client suport = findById(id);
             if (updatedClient.getCpf() == null){
-                Client provisory = findById(id);
-                updatedClient.setCpf(provisory.getCpf());
+                updatedClient.setCpf(suport.getCpf());
             }
+            NullField.nullFieldClient(updatedClient);
 
             if (Objects.equals(updatedClient.getCpf(), suport.getCpf())){
                 updatedClient.setId(id);
                 updatedClient = repository.save(updatedClient);
                 return updatedClient;
             }
-            else if (IsCPF.isValidcpf(updatedClient.getCpf())){
-                if (cpfAlreadyRegistered(updatedClient.getCpf())){
-                    throw new InvalidCpfException("CPF '"+updatedClient.getCpf()+"' já existe.");
-                }
-                else{
-                    updatedClient.setId(id);
-                    updatedClient = repository.save(updatedClient);
-                    return updatedClient;
-                }
+            else if (cpfIsOk(updatedClient.getCpf())){
+                updatedClient.setId(id);
+                updatedClient = repository.save(updatedClient);
+                return updatedClient;
             }
             throw new InvalidCpfException("CPF '"+updatedClient.getCpf()+"' inválido!");
         }
@@ -73,27 +67,30 @@ public class ClientService {
         else throw new ResourceNotFoundException("Id "+id+" não encontrado!");
     }
 
-    public boolean clientValidate(Client client){
-        if (client.getName() == null || client.getName() == "" || client.getBirthDate() == null ||
-        client.getChildren() == null || client.getIncome() == null || client.getCpf() == null){
-            throw new NullOrEmptyFieldException("Preencha todos os campos!");
-        }
 
-        if (IsCPF.isValidcpf(client.getCpf())){
-            if (cpfAlreadyRegistered(client.getCpf())){
-                throw new InvalidCpfException("CPF '"+client.getCpf()+"' já existe.");
-            }
-            else{
-                return true;
-            }
+    public boolean clientValidate(Client client){
+        NullField.nullFieldClient(client);
+        if(cpfIsOk(client.getCpf())){
+            return true;
         }
-        else {
-            throw new InvalidCpfException("CPF '"+client.getCpf()+"' inválido!");
-        }
+        return false;
     }
 
     public boolean cpfAlreadyRegistered(String cpf){
         return repository.existsByCpf(cpf);
+    }
+
+    public boolean cpfIsOk(String cpf){
+        if (IsCPF.isValidcpf(cpf)) {
+            if (cpfAlreadyRegistered(cpf)) {
+                throw new InvalidCpfException("CPF '" + cpf + "' já existe.");
+            } else {
+                return true;
+            }
+        }
+        else {
+            throw new InvalidCpfException("CPF '"+cpf+"' inválido!");
+        }
     }
 
     public void updateData(Client client, Client updatedClient){
