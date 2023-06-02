@@ -87,6 +87,8 @@ public class Client {
         return vehicles;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -87,12 +87,4 @@ public class ClientService {
         }
     }
 
-    public void updateData(Client client, Client updatedClient){
-        client.setName(updatedClient.getName());
-        client.setCpf(updatedClient.getCpf());
-        client.setBirthDate(updatedClient.getBirthDate());
-        client.setIncome(updatedClient.getIncome());
-        client.setChildren(updatedClient.getChildren());
-    }
-
 }

@@ -27,7 +27,7 @@ public class Vehicle {
         this.id = id;
         this.name = name;
         this.licensePlate = licensePlate;
-        setColor(color);
+        setColor(color.getCode());
         this.owner = owner;
     }
 
@@ -59,8 +59,9 @@ public class Vehicle {
         return Color.valueOf(color);
     }
 
-    public void setColor(Color color) {
-        this.color = color.getCode();
+    public void setColor(Integer color) {
+
+        this.color = color;
     }
 
     public Client getOwner() {

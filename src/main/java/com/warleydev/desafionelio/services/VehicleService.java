@@ -6,7 +6,6 @@ import com.warleydev.desafionelio.entities.enums.Color;
 import com.warleydev.desafionelio.repositories.ClientRepository;
 import com.warleydev.desafionelio.repositories.VehicleRepository;
 import com.warleydev.desafionelio.services.exceptions.InvalidLicensePlateException;
-import com.warleydev.desafionelio.services.exceptions.NullOrEmptyFieldException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 import com.warleydev.desafionelio.utils.LicensePlateValidate;
 import com.warleydev.desafionelio.utils.NullField;
@@ -15,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 public class VehicleService {
@@ -46,10 +47,23 @@ public class VehicleService {
         return null;
     }
 
-    public Vehicle update(Long id, Vehicle updatedVehicle){
+    public VehicleDTO update(Long id, VehicleDTO updatedVehicle){
         if (repository.existsById(id)){
-            updatedVehicle.setId(id);
-            updatedVehicle = repository.save(updatedVehicle);
+            Vehicle suport = findById(id);
+            if (updatedVehicle.getLicensePlate() == null){
+                updatedVehicle.setLicensePlate(suport.getLicensePlate());
+                NullField.nullFieldVehicle(updatedVehicle);
+            }
+            else if (!Objects.equals(updatedVehicle.getLicensePlate(), suport.getLicensePlate())){
+                plateIsOk(updatedVehicle.getLicensePlate());
+                updatedVehicle.setId(suport.getId());
+                updateData(updatedVehicle, suport);
+                suport = repository.save(suport);
+                return updatedVehicle;
+            }
+            updatedVehicle.setId(suport.getId());
+            updateData(updatedVehicle, suport);
+            suport = repository.save(suport);
             return updatedVehicle;
         }
         else throw new ResourceNotFoundException("Id "+id+" não encontrado");
@@ -62,6 +76,7 @@ public class VehicleService {
         else throw new ResourceNotFoundException("Id "+id+" não encontrado!");
     }
 
+
     public boolean vehicleValidate(VehicleDTO dto){
         NullField.nullFieldVehicle(dto);
         if (!clientRepository.existsById(dto.getOwnerId())){
@@ -72,18 +87,21 @@ public class VehicleService {
         return true;
     }
 
-    public boolean plateAlreadyRegistered(String plate){
-        return repository.existsByLicensePlate(plate);
-    }
-
     public void plateIsOk(String plate){
         if(LicensePlateValidate.isValid(plate)){
-            if (plateAlreadyRegistered(plate)){
+            if (repository.existsByLicensePlate(plate)){
                 throw new InvalidLicensePlateException("Placa '"+plate+"' já existe!");
             }
         }
         else{
             throw new InvalidLicensePlateException("Modelo de placa inválido!");
         }
+    }
+
+    public void updateData(VehicleDTO dto, Vehicle entity){
+        entity.setName(dto.getName());
+        entity.setLicensePlate(dto.getLicensePlate());
+        entity.setColor(dto.getColor());
+        entity.setOwner(clientRepository.getReferenceById(dto.getOwnerId()));
     }
 }

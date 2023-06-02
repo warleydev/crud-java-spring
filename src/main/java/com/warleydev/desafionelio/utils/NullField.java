@@ -2,6 +2,7 @@ package com.warleydev.desafionelio.utils;
 
 import com.warleydev.desafionelio.dto.VehicleDTO;
 import com.warleydev.desafionelio.entities.Client;
+import com.warleydev.desafionelio.entities.Vehicle;
 import com.warleydev.desafionelio.entities.enums.Color;
 import com.warleydev.desafionelio.services.exceptions.NullOrEmptyFieldException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
