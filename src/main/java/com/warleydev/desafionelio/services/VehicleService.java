@@ -52,18 +52,16 @@ public class VehicleService {
             Vehicle suport = findById(id);
             if (updatedVehicle.getLicensePlate() == null){
                 updatedVehicle.setLicensePlate(suport.getLicensePlate());
-                NullField.nullFieldVehicle(updatedVehicle);
             }
-            else if (!Objects.equals(updatedVehicle.getLicensePlate(), suport.getLicensePlate())){
-                plateIsOk(updatedVehicle.getLicensePlate());
-                updatedVehicle.setId(suport.getId());
-                updateData(updatedVehicle, suport);
-                suport = repository.save(suport);
+            NullField.nullFieldVehicle(updatedVehicle);
+
+            if (Objects.equals(updatedVehicle.getLicensePlate(), suport.getLicensePlate())){
+                saveVehicle(updatedVehicle, suport);
                 return updatedVehicle;
             }
-            updatedVehicle.setId(suport.getId());
-            updateData(updatedVehicle, suport);
-            suport = repository.save(suport);
+
+            plateIsOk(updatedVehicle.getLicensePlate());
+            saveVehicle(updatedVehicle, suport);
             return updatedVehicle;
         }
         else throw new ResourceNotFoundException("Id "+id+" não encontrado");
@@ -103,5 +101,11 @@ public class VehicleService {
         entity.setLicensePlate(dto.getLicensePlate());
         entity.setColor(dto.getColor());
         entity.setOwner(clientRepository.getReferenceById(dto.getOwnerId()));
+    }
+
+    void saveVehicle(VehicleDTO dto, Vehicle entity){
+        dto.setId(entity.getId());
+        updateData(dto, entity);
+        entity = repository.save(entity);
     }
 }
