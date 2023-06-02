@@ -9,6 +9,7 @@ import com.warleydev.desafionelio.services.exceptions.InvalidLicensePlateExcepti
 import com.warleydev.desafionelio.services.exceptions.NullOrEmptyFieldException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 import com.warleydev.desafionelio.utils.LicensePlateValidate;
+import com.warleydev.desafionelio.utils.NullField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -62,22 +63,12 @@ public class VehicleService {
     }
 
     public boolean vehicleValidate(VehicleDTO dto){
-        if (dto.getName() == null || dto.getName() == "" || dto.getColor() == null
-                || dto.getLicensePlate() == null || dto.getOwnerId() == null){
-            throw new NullOrEmptyFieldException("Cadastre todos os dados do veículo");
-        }
+        NullField.nullFieldVehicle(dto);
         if (!clientRepository.existsById(dto.getOwnerId())){
             throw new ResourceNotFoundException("Dono do veículo não encontrado! Id: "+ dto.getOwnerId());
         }
 
-        if(LicensePlateValidate.isValid(dto.getLicensePlate())){
-            if (plateAlreadyRegistered(dto.getLicensePlate())){
-                throw new InvalidLicensePlateException("Placa '"+dto.getLicensePlate()+"' já existe!");
-            }
-        }
-        else{
-            throw new InvalidLicensePlateException("Modelo de placa inválido!");
-        }
+        plateIsOk(dto.getLicensePlate());
         return true;
     }
 
@@ -85,4 +76,14 @@ public class VehicleService {
         return repository.existsByLicensePlate(plate);
     }
 
+    public void plateIsOk(String plate){
+        if(LicensePlateValidate.isValid(plate)){
+            if (plateAlreadyRegistered(plate)){
+                throw new InvalidLicensePlateException("Placa '"+plate+"' já existe!");
+            }
+        }
+        else{
+            throw new InvalidLicensePlateException("Modelo de placa inválido!");
+        }
+    }
 }

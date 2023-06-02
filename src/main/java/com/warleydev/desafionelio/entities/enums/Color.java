@@ -1,5 +1,7 @@
 package com.warleydev.desafionelio.entities.enums;
 
+import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
+
 public enum Color {
     BLACK(1),
     WHITE(2),
@@ -23,7 +25,7 @@ public enum Color {
                     return value;
                 }
             }
-            throw new IllegalArgumentException("Cor inválida!");
+            throw new ResourceNotFoundException("Cor inválida!");
     }
 }
     

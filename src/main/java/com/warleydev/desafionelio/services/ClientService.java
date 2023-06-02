@@ -50,12 +50,10 @@ public class ClientService {
                 updatedClient = repository.save(updatedClient);
                 return updatedClient;
             }
-            else if (cpfIsOk(updatedClient.getCpf())){
-                updatedClient.setId(id);
-                updatedClient = repository.save(updatedClient);
-                return updatedClient;
-            }
-            throw new InvalidCpfException("CPF '"+updatedClient.getCpf()+"' inválido!");
+            cpfIsOk(updatedClient.getCpf());
+            updatedClient.setId(id);
+            updatedClient = repository.save(updatedClient);
+            return updatedClient;
         }
         else throw new ResourceNotFoundException("Id "+id+" não encontrado");
     }
@@ -70,22 +68,18 @@ public class ClientService {
 
     public boolean clientValidate(Client client){
         NullField.nullFieldClient(client);
-        if(cpfIsOk(client.getCpf())){
-            return true;
-        }
-        return false;
+        cpfIsOk(client.getCpf());
+        return true;
     }
 
     public boolean cpfAlreadyRegistered(String cpf){
         return repository.existsByCpf(cpf);
     }
 
-    public boolean cpfIsOk(String cpf){
+    public void cpfIsOk(String cpf){
         if (IsCPF.isValidcpf(cpf)) {
             if (cpfAlreadyRegistered(cpf)) {
                 throw new InvalidCpfException("CPF '" + cpf + "' já existe.");
-            } else {
-                return true;
             }
         }
         else {
