@@ -1,5 +1,7 @@
 package com.warleydev.desafionelio.services;
 
+import com.warleydev.desafionelio.dto.ClientDTO;
+import com.warleydev.desafionelio.dto.ClientUpdatedDTO;
 import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.repositories.ClientRepository;
 import com.warleydev.desafionelio.services.exceptions.InvalidCpfException;
@@ -11,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
 
 @Service
 public class ClientService {
@@ -37,23 +37,18 @@ public class ClientService {
         return null;
     }
 
-    public Client update(Long id, Client updatedClient){
+    public ClientUpdatedDTO update(Long id, ClientUpdatedDTO updatedDTO){
         if (repository.existsById(id)){
-            Client suport = findById(id);
-            if (updatedClient.getCpf() == null){
-                updatedClient.setCpf(suport.getCpf());
-            }
-            NullField.nullFieldClient(updatedClient);
+            Client entity = findById(id);
+            NullField.nullFieldClient(entity);
 
-            if (Objects.equals(updatedClient.getCpf(), suport.getCpf())){
-                updatedClient.setId(id);
-                updatedClient = repository.save(updatedClient);
-                return updatedClient;
-            }
-            cpfIsOk(updatedClient.getCpf());
-            updatedClient.setId(id);
-            updatedClient = repository.save(updatedClient);
-            return updatedClient;
+            entity.setName(updatedDTO.getName());
+            entity.setChildren(updatedDTO.getChildren());
+            entity.setIncome(updatedDTO.getIncome());
+            entity = repository.save(entity);
+
+            return new ClientUpdatedDTO(entity);
+
         }
         else throw new ResourceNotFoundException("Id "+id+" não encontrado");
     }

@@ -2,35 +2,32 @@ package com.warleydev.desafionelio.dto;
 
 import com.warleydev.desafionelio.entities.Client;
 
-import java.time.Instant;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-public class ClientDTO {
+public class ClientUpdatedDTO {
     private Long id;
     private String name;
     private Double income;
-    private Instant birthDate;
     private Integer children;
-
     private Set<VehicleDTO> vehicles = new HashSet<>();
 
-    public ClientDTO(){
+    public ClientUpdatedDTO(){
     }
 
-    public ClientDTO(Long id, String name, Double income, Instant birthDate, Integer children) {
+    public ClientUpdatedDTO(Long id, String name, Double income, Integer children, Set<VehicleDTO> vehicles) {
         this.id = id;
         this.name = name;
         this.income = income;
-        this.birthDate = birthDate;
         this.children = children;
+        this.vehicles = vehicles;
     }
 
-    public ClientDTO(Client client){
+    public ClientUpdatedDTO(Client client){
         id = client.getId();
         name = client.getName();
         income = client.getIncome();
-        birthDate = client.getBirthDate();
         children = client.getChildren();
     }
 
@@ -58,14 +55,6 @@ public class ClientDTO {
         this.income = income;
     }
 
-    public Instant getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Instant birthDate) {
-        this.birthDate = birthDate;
-    }
-
     public Integer getChildren() {
         return children;
     }
@@ -78,4 +67,16 @@ public class ClientDTO {
         return vehicles;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClientUpdatedDTO that = (ClientUpdatedDTO) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
