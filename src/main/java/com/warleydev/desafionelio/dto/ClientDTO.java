@@ -3,6 +3,9 @@ package com.warleydev.desafionelio.dto;
 import com.warleydev.desafionelio.entities.Client;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,6 +13,7 @@ public class ClientDTO {
     private Long id;
     private String name;
     private Double income;
+    private Integer age;
     private Instant birthDate;
     private Integer children;
 
@@ -22,8 +26,8 @@ public class ClientDTO {
         this.id = id;
         this.name = name;
         this.income = income;
-        this.birthDate = birthDate;
         this.children = children;
+        setAge(birthDate);
     }
 
     public ClientDTO(Client client){
@@ -32,6 +36,7 @@ public class ClientDTO {
         income = client.getIncome();
         birthDate = client.getBirthDate();
         children = client.getChildren();
+        setAge(birthDate);
     }
 
     public Long getId() {
@@ -57,15 +62,6 @@ public class ClientDTO {
     public void setIncome(Double income) {
         this.income = income;
     }
-
-    public Instant getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Instant birthDate) {
-        this.birthDate = birthDate;
-    }
-
     public Integer getChildren() {
         return children;
     }
@@ -78,4 +74,14 @@ public class ClientDTO {
         return vehicles;
     }
 
+    public final Integer getAge() {
+        return age;
+    }
+
+    public final void setAge(Instant birthDate) {
+        LocalDate today = LocalDate.now();
+        LocalDate birthLocalDate = birthDate.atZone(ZoneId.systemDefault()).toLocalDate();
+        Period period = Period.between(birthLocalDate, today);
+        age = period.getYears();
+    }
 }

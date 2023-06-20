@@ -45,7 +45,7 @@ public class ResourceExceptionHandler {
     }
 
     @ExceptionHandler(InvalidLicensePlateException.class)
-    public ResponseEntity<StandardError> invalidCpf(InvalidLicensePlateException e, HttpServletRequest request){
+    public ResponseEntity<StandardError> invalidLicensePlate(InvalidLicensePlateException e, HttpServletRequest request){
         StandardError err = new StandardError();
         err.setTimestamp(Instant.now());
         err.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -54,4 +54,16 @@ public class ResourceExceptionHandler {
         err.setMessage(e.getMessage());
         return ResponseEntity.status(err.getStatus()).body(err);
     }
+
+    @ExceptionHandler(InvalidBirthDateException.class)
+    public ResponseEntity<StandardError> invalidBirthDate(InvalidBirthDateException e, HttpServletRequest request){
+        StandardError err = new StandardError();
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setError("Data de nascimento errada!");
+        err.setPath(request.getRequestURI());
+        err.setMessage(e.getMessage());
+        return ResponseEntity.status(err.getStatus()).body(err);
+    }
+
 }

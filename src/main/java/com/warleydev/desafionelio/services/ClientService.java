@@ -4,6 +4,7 @@ import com.warleydev.desafionelio.dto.ClientInsertDTO;
 import com.warleydev.desafionelio.dto.ClientUpdateDTO;
 import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.repositories.ClientRepository;
+import com.warleydev.desafionelio.services.exceptions.InvalidBirthDateException;
 import com.warleydev.desafionelio.services.exceptions.InvalidCpfException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 import com.warleydev.desafionelio.services.utils.IsCPF;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 @Service
 public class ClientService {
@@ -34,7 +37,7 @@ public class ClientService {
         if (clientValidate(dto)){
             Client entity = new Client();
             fromDto(dto, entity);
-            return new ClientInsertDTO(repository.save(entity), dto.getCpf());
+            return new ClientInsertDTO(repository.save(entity));
         }
         return null;
     }
@@ -65,6 +68,9 @@ public class ClientService {
 
     public boolean clientValidate(ClientInsertDTO dto){
         ValidateObject.nullFieldClientInsert(dto);
+        if (dto.getBirthDate().isAfter(Instant.now())){
+            throw new InvalidBirthDateException("Por favor, insira uma data de nascimento válida!");
+        }
         cpfIsOk(dto.getCpf());
         return true;
     }
