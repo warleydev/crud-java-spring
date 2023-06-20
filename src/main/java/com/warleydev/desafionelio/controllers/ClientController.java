@@ -1,6 +1,7 @@
 package com.warleydev.desafionelio.controllers;
 
 import com.warleydev.desafionelio.dto.ClientDTO;
+import com.warleydev.desafionelio.dto.ClientInsertDTO;
 import com.warleydev.desafionelio.dto.ClientUpdatedDTO;
 import com.warleydev.desafionelio.services.ClientService;
 import com.warleydev.desafionelio.entities.Client;
@@ -40,8 +41,8 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientDTO> insert(@RequestBody Client client){
-        ClientDTO dto = new ClientDTO(service.insert(client));
+    public ResponseEntity<ClientInsertDTO> insert(@RequestBody ClientInsertDTO dto){
+        dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);

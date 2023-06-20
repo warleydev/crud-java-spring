@@ -1,5 +1,7 @@
 package com.warleydev.desafionelio.utils;
 
+import com.warleydev.desafionelio.dto.ClientInsertDTO;
+import com.warleydev.desafionelio.dto.ClientUpdatedDTO;
 import com.warleydev.desafionelio.dto.VehicleDTO;
 import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.entities.Vehicle;
@@ -9,9 +11,16 @@ import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 
 public class NullField {
 
-    public static void nullFieldClient(Client client){
+    public static void nullFieldClientInsert(ClientInsertDTO client){
         if (client.getName() == null || client.getName() == "" || client.getBirthDate() == null ||
                 client.getChildren() == null || client.getIncome() == null || client.getCpf() == null){
+            throw new NullOrEmptyFieldException("Preencha todos os campos!");
+        }
+    }
+
+    public static void nullFieldClientUpdate(ClientUpdatedDTO dto){
+        if (dto.getName() == null || dto.getName() == "" || dto.getChildren() == null ||
+                dto.getIncome() == null){
             throw new NullOrEmptyFieldException("Preencha todos os campos!");
         }
     }

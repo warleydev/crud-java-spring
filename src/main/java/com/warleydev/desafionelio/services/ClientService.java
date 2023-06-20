@@ -1,6 +1,7 @@
 package com.warleydev.desafionelio.services;
 
 import com.warleydev.desafionelio.dto.ClientDTO;
+import com.warleydev.desafionelio.dto.ClientInsertDTO;
 import com.warleydev.desafionelio.dto.ClientUpdatedDTO;
 import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.repositories.ClientRepository;
@@ -30,9 +31,11 @@ public class ClientService {
         return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado!"));
     }
 
-    public Client insert(Client client){
-        if (clientValidate(client)){
-            return repository.save(client);
+    public ClientInsertDTO insert(ClientInsertDTO dto){
+        if (clientValidate(dto)){
+            Client entity = new Client();
+            fromDto(dto, entity);
+            return new ClientInsertDTO(repository.save(entity), dto.getCpf());
         }
         return null;
     }
@@ -40,7 +43,8 @@ public class ClientService {
     public ClientUpdatedDTO update(Long id, ClientUpdatedDTO updatedDTO){
         if (repository.existsById(id)){
             Client entity = findById(id);
-            NullField.nullFieldClient(entity);
+
+            NullField.nullFieldClientUpdate(updatedDTO);
 
             entity.setName(updatedDTO.getName());
             entity.setChildren(updatedDTO.getChildren());
@@ -61,9 +65,9 @@ public class ClientService {
     }
 
 
-    public boolean clientValidate(Client client){
-        NullField.nullFieldClient(client);
-        cpfIsOk(client.getCpf());
+    public boolean clientValidate(ClientInsertDTO dto){
+        NullField.nullFieldClientInsert(dto);
+        cpfIsOk(dto.getCpf());
         return true;
     }
 
@@ -80,6 +84,14 @@ public class ClientService {
         else {
             throw new InvalidCpfException("CPF '"+cpf+"' inválido!");
         }
+    }
+
+    public void fromDto(ClientInsertDTO dto, Client entity){
+        entity.setIncome(dto.getIncome());
+        entity.setCpf(dto.getCpf());
+        entity.setName(dto.getName());
+        entity.setBirthDate(dto.getBirthDate());
+        entity.setChildren(dto.getChildren());
     }
 
 }
