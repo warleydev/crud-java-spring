@@ -1,5 +1,7 @@
 package com.warleydev.desafionelio.controllers;
 
+import com.warleydev.desafionelio.dto.VehicleInsertDTO;
+import com.warleydev.desafionelio.dto.VehicleUpdateDTO;
 import com.warleydev.desafionelio.entities.Vehicle;
 import com.warleydev.desafionelio.dto.VehicleDTO;
 import com.warleydev.desafionelio.services.VehicleService;
@@ -39,7 +41,7 @@ public class VehicleController {
     }
 
     @PostMapping
-    public ResponseEntity<VehicleDTO> insert(@RequestBody VehicleDTO dto){
+    public ResponseEntity<VehicleInsertDTO> insert(@RequestBody VehicleInsertDTO dto){
         dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -47,7 +49,7 @@ public class VehicleController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<VehicleDTO> update(@PathVariable Long id, @RequestBody VehicleDTO dto){
+    public ResponseEntity<VehicleUpdateDTO> update(@PathVariable Long id, @RequestBody VehicleUpdateDTO dto){
         dto = service.update(id, dto);
         return ResponseEntity.ok(dto);
     }

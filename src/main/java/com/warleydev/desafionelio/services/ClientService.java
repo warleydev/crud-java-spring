@@ -1,14 +1,13 @@
 package com.warleydev.desafionelio.services;
 
-import com.warleydev.desafionelio.dto.ClientDTO;
 import com.warleydev.desafionelio.dto.ClientInsertDTO;
-import com.warleydev.desafionelio.dto.ClientUpdatedDTO;
+import com.warleydev.desafionelio.dto.ClientUpdateDTO;
 import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.repositories.ClientRepository;
 import com.warleydev.desafionelio.services.exceptions.InvalidCpfException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
-import com.warleydev.desafionelio.utils.IsCPF;
-import com.warleydev.desafionelio.utils.NullField;
+import com.warleydev.desafionelio.services.utils.IsCPF;
+import com.warleydev.desafionelio.services.utils.ValidateObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,18 +39,17 @@ public class ClientService {
         return null;
     }
 
-    public ClientUpdatedDTO update(Long id, ClientUpdatedDTO updatedDTO){
+    public ClientUpdateDTO update(Long id, ClientUpdateDTO updatedDTO){
         if (repository.existsById(id)){
+            ValidateObject.nullFieldClientUpdate(updatedDTO);
             Client entity = findById(id);
-
-            NullField.nullFieldClientUpdate(updatedDTO);
 
             entity.setName(updatedDTO.getName());
             entity.setChildren(updatedDTO.getChildren());
             entity.setIncome(updatedDTO.getIncome());
             entity = repository.save(entity);
 
-            return new ClientUpdatedDTO(entity);
+            return new ClientUpdateDTO(entity);
 
         }
         else throw new ResourceNotFoundException("Id "+id+" não encontrado");
@@ -66,7 +64,7 @@ public class ClientService {
 
 
     public boolean clientValidate(ClientInsertDTO dto){
-        NullField.nullFieldClientInsert(dto);
+        ValidateObject.nullFieldClientInsert(dto);
         cpfIsOk(dto.getCpf());
         return true;
     }

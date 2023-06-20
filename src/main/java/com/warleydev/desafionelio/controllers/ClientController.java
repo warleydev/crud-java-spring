@@ -2,9 +2,8 @@ package com.warleydev.desafionelio.controllers;
 
 import com.warleydev.desafionelio.dto.ClientDTO;
 import com.warleydev.desafionelio.dto.ClientInsertDTO;
-import com.warleydev.desafionelio.dto.ClientUpdatedDTO;
+import com.warleydev.desafionelio.dto.ClientUpdateDTO;
 import com.warleydev.desafionelio.services.ClientService;
-import com.warleydev.desafionelio.entities.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,7 +48,7 @@ public class ClientController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ClientUpdatedDTO> update(@PathVariable Long id, @RequestBody ClientUpdatedDTO dto){
+    public ResponseEntity<ClientUpdateDTO> update(@PathVariable Long id, @RequestBody ClientUpdateDTO dto){
         dto = service.update(id, dto);
         return ResponseEntity.ok(dto);
     }

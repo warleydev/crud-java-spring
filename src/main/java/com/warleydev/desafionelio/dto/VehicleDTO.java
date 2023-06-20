@@ -6,17 +6,15 @@ import com.warleydev.desafionelio.entities.Vehicle;
 public class VehicleDTO {
     private Long id;
     private String name;
-    private String licensePlate;
     private Integer color;
     private Long ownerId;
 
     public VehicleDTO(){
     }
 
-    public VehicleDTO(Long id, String name, String licensePlate, Integer color, Long ownerId) {
+    public VehicleDTO(Long id, String name, Integer color, Long ownerId) {
         this.id = id;
         this.name = name;
-        this.licensePlate = licensePlate;
         this.color = color;
         this.ownerId = ownerId;
     }
@@ -24,7 +22,6 @@ public class VehicleDTO {
     public VehicleDTO(Vehicle entity){
         id = entity.getId();
         name = entity.getName();
-        licensePlate = entity.getLicensePlate();
         color = entity.getColor().getCode();
         ownerId = entity.getOwner().getId();
     }
@@ -43,14 +40,6 @@ public class VehicleDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLicensePlate() {
-        return licensePlate;
-    }
-
-    public void setLicensePlate(String licensePlate) {
-        this.licensePlate = licensePlate;
     }
 
     public Integer getColor() {
