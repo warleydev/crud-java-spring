@@ -65,5 +65,15 @@ public class ResourceExceptionHandler {
         err.setMessage(e.getMessage());
         return ResponseEntity.status(err.getStatus()).body(err);
     }
+    @ExceptionHandler(UnderageClientException.class)
+    public ResponseEntity<StandardError> underageClient(UnderageClientException e, HttpServletRequest request){
+        StandardError err = new StandardError();
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setError("Cliente inválido. ");
+        err.setPath(request.getRequestURI());
+        err.setMessage(e.getMessage());
+        return ResponseEntity.status(err.getStatus()).body(err);
+    }
 
 }

@@ -1,6 +1,5 @@
 package com.warleydev.desafionelio.services;
 
-import com.warleydev.desafionelio.dto.VehicleDTO;
 import com.warleydev.desafionelio.dto.VehicleInsertDTO;
 import com.warleydev.desafionelio.dto.VehicleUpdateDTO;
 import com.warleydev.desafionelio.entities.Vehicle;
@@ -8,6 +7,7 @@ import com.warleydev.desafionelio.entities.enums.Color;
 import com.warleydev.desafionelio.repositories.ClientRepository;
 import com.warleydev.desafionelio.repositories.VehicleRepository;
 import com.warleydev.desafionelio.services.exceptions.InvalidLicensePlateException;
+import com.warleydev.desafionelio.services.exceptions.UnderageClientException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 import com.warleydev.desafionelio.services.utils.LicensePlateValidate;
 import com.warleydev.desafionelio.services.utils.ValidateObject;
@@ -52,6 +52,7 @@ public class VehicleService {
     public VehicleUpdateDTO update(Long id, VehicleUpdateDTO updatedVehicle){
         if (repository.existsById(id)){
             nullFieldVehicleUpdate(updatedVehicle);
+            clientCanHaveCar(updatedVehicle.getOwnerId());
             Vehicle entity = findById(id);
             saveVehicle(updatedVehicle, entity);
             return updatedVehicle;
@@ -72,7 +73,7 @@ public class VehicleService {
         if (!clientRepository.existsById(dto.getOwnerId())){
             throw new ResourceNotFoundException("Dono do veículo não encontrado! Id: "+ dto.getOwnerId());
         }
-
+        clientCanHaveCar(dto.getOwnerId());
         plateIsOk(dto.getLicensePlate());
         return true;
     }
@@ -99,5 +100,12 @@ public class VehicleService {
     void saveVehicle(VehicleUpdateDTO dto, Vehicle entity){
         updateData(dto, entity);
         entity = repository.saveAndFlush(entity);
+    }
+
+    void clientCanHaveCar(Long id){
+        if (clientRepository.findById(id).get().getAge() >= 18){
+            return;
+        }
+        throw new UnderageClientException("O cliente precisa ter ao menos 18 anos.");
     }
 }
