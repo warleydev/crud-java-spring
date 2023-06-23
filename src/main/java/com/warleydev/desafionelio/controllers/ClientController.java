@@ -4,6 +4,7 @@ import com.warleydev.desafionelio.dto.ClientDTO;
 import com.warleydev.desafionelio.dto.ClientInsertDTO;
 import com.warleydev.desafionelio.dto.ClientUpdateDTO;
 import com.warleydev.desafionelio.services.ClientService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,7 +41,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientInsertDTO> insert(@RequestBody ClientInsertDTO dto){
+    public ResponseEntity<ClientInsertDTO> insert(@Valid  @RequestBody ClientInsertDTO dto){
         dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();

@@ -11,7 +11,7 @@ import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 public class ValidateObject {
 
     public static void nullFieldClientInsert(ClientInsertDTO client){
-        if (client.getName() == null || client.getName() == "" || client.getBirthDate() == null ||
+        if (client.getBirthDate() == null ||
                 client.getChildren() == null || client.getIncome() == null || client.getCpf() == null){
             throw new NullOrEmptyFieldException("Preencha todos os campos!");
         }

@@ -3,6 +3,9 @@ package com.warleydev.desafionelio.entities;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -19,6 +22,7 @@ public class Client {
     private Double income;
     private Instant birthDate;
     private Integer children;
+    private Integer age;
 
     @OneToMany(mappedBy = "owner")
     private Set<Vehicle> vehicles = new HashSet<>();
@@ -87,7 +91,15 @@ public class Client {
         return vehicles;
     }
 
+    public Integer getAge() {
+        return age;
+    }
 
+    public final void setAge(Instant birthDate) {
+        LocalDate birthLocalDate = birthDate.atZone(ZoneId.systemDefault()).toLocalDate();
+        Period period = Period.between(birthLocalDate, LocalDate.now());
+        age = period.getYears();
+    }
 
     @Override
     public boolean equals(Object o) {

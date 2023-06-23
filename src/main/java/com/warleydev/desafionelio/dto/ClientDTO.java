@@ -1,6 +1,9 @@
 package com.warleydev.desafionelio.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.warleydev.desafionelio.entities.Client;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -11,9 +14,12 @@ import java.util.Set;
 
 public class ClientDTO {
     private Long id;
+    @NotBlank
     private String name;
     private Double income;
     private Integer age;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Instant birthDate;
     private Integer children;
 
@@ -79,9 +85,12 @@ public class ClientDTO {
     }
 
     public final void setAge(Instant birthDate) {
-        LocalDate today = LocalDate.now();
         LocalDate birthLocalDate = birthDate.atZone(ZoneId.systemDefault()).toLocalDate();
-        Period period = Period.between(birthLocalDate, today);
+        Period period = Period.between(birthLocalDate, LocalDate.now());
         age = period.getYears();
+    }
+
+    public Instant getBirthDate() {
+        return birthDate;
     }
 }

@@ -37,7 +37,7 @@ public class ClientService {
         if (clientValidate(dto)){
             Client entity = new Client();
             fromDto(dto, entity);
-            return new ClientInsertDTO(repository.save(entity));
+            return new ClientInsertDTO(repository.save(entity), dto.getCpf());
         }
         return null;
     }
@@ -95,6 +95,7 @@ public class ClientService {
         entity.setCpf(dto.getCpf());
         entity.setName(dto.getName());
         entity.setBirthDate(dto.getBirthDate());
+        entity.setAge(dto.getBirthDate());
         entity.setChildren(dto.getChildren());
     }
 
