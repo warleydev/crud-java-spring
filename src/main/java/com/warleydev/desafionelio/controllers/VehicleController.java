@@ -50,8 +50,7 @@ public class VehicleController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<VehicleUpdateDTO> update(@PathVariable Long id, @RequestBody VehicleUpdateDTO dto){
-        dto = service.update(id, dto);
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(value = "/{id}")

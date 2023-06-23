@@ -44,7 +44,7 @@ public class VehicleService {
             Vehicle entity = new Vehicle(
                     null, dto.getName(), dto.getLicensePlate(), Color.valueOf(dto.getColor()),
                     clientRepository.getReferenceById(dto.getOwnerId()));
-            return new VehicleInsertDTO(repository.save(entity), entity.getLicensePlate());
+            return new VehicleInsertDTO(repository.save(entity));
         }
         return null;
     }
@@ -98,6 +98,6 @@ public class VehicleService {
 
     void saveVehicle(VehicleUpdateDTO dto, Vehicle entity){
         updateData(dto, entity);
-        entity = repository.save(entity);
+        entity = repository.saveAndFlush(entity);
     }
 }

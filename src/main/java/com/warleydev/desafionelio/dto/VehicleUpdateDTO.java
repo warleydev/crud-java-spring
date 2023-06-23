@@ -1,30 +1,22 @@
 package com.warleydev.desafionelio.dto;
 
-public class VehicleUpdateDTO {
-    private Integer color;
-    private Long ownerId;
+import com.warleydev.desafionelio.entities.Vehicle;
 
-    public VehicleUpdateDTO(){
+public class VehicleUpdateDTO extends VehicleDTO{
+
+    public VehicleUpdateDTO() {
     }
 
-    public VehicleUpdateDTO(Integer color, Long ownerId) {
-        this.color = color;
-        this.ownerId = ownerId;
+    public VehicleUpdateDTO(Long id, String name, Integer color, Long ownerId, String licensePlate) {
+        super(id, name, color, ownerId, licensePlate);
     }
 
-    public Integer getColor() {
-        return color;
+    public VehicleUpdateDTO(Vehicle entity) {
+        super(entity);
     }
 
-    public void setColor(Integer color) {
-        this.color = color;
-    }
-
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
+    @Override
+    public String getLicensePlate(){
+        return null;
     }
 }

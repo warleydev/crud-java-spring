@@ -4,26 +4,14 @@ import com.warleydev.desafionelio.entities.Vehicle;
 
 public class VehicleInsertDTO extends VehicleDTO{
 
-    private String licensePlate;
-
     public VehicleInsertDTO(){
     }
 
     public VehicleInsertDTO(Long id, String name, Integer color, Long ownerId, String licensePlate) {
-        super(id, name, color, ownerId);
-        this.licensePlate = licensePlate;
+        super(id, name, color, ownerId, licensePlate);
     }
 
-    public VehicleInsertDTO(Vehicle entity, String licensePlate) {
+    public VehicleInsertDTO(Vehicle entity) {
         super(entity);
-        this.licensePlate = licensePlate;
-    }
-
-    public String getLicensePlate() {
-        return licensePlate;
-    }
-
-    public void setLicensePlate(String licensePlate) {
-        this.licensePlate = licensePlate;
     }
 }
