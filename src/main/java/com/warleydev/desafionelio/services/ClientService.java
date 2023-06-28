@@ -37,7 +37,7 @@ public class ClientService {
         if (clientValidate(dto)){
             Client entity = new Client();
             fromDto(dto, entity);
-            return new ClientInsertDTO(repository.save(entity), dto.getCpf());
+            return new ClientInsertDTO(repository.save(entity));
         }
         return null;
     }

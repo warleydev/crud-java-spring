@@ -1,7 +1,5 @@
 package com.warleydev.desafionelio.services.utils;
 
-import java.util.InputMismatchException;
-
 public class IsCPF {
     public static boolean isValidcpf(String cpf){
         if ( cpf == null){

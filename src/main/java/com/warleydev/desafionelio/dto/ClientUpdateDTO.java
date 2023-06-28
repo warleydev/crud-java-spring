@@ -9,12 +9,16 @@ public class ClientUpdateDTO extends ClientDTO{
     public ClientUpdateDTO() {
     }
 
-    public ClientUpdateDTO(Long id, String name, Double income, Instant birthDate, Integer children) {
-        super(id, name, income, birthDate, children);
+    public ClientUpdateDTO(Long id, String name, Double income, Instant birthDate, Integer children, String cpf) {
+        super(id, name, income, birthDate, children, cpf);
     }
 
     public ClientUpdateDTO(Client client) {
         super(client);
     }
 
+    @Override
+    public String getCpf() {
+        return null;
+    }
 }
