@@ -2,11 +2,12 @@ package com.warleydev.desafionelio.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.warleydev.desafionelio.entities.Client;
+import com.warleydev.desafionelio.entities.Vehicle;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Positive;
-import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -36,7 +37,7 @@ public class ClientDTO {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String cpf;
 
-    private Set<VehicleDTO> vehicles = new HashSet<>();
+    private Set<Long> vehiclesId = new HashSet<>();
 
     public ClientDTO(){
     }
@@ -58,9 +59,19 @@ public class ClientDTO {
         children = client.getChildren();
         cpf = client.getCpf();
         setAge(birthDate);
-        client.getVehicles().forEach(
-                x -> vehicles.add(new VehicleDTO(x))
-        );
+    }
+
+    public ClientDTO(Client client, Set<Vehicle> vehicles){
+        id = client.getId();
+        name = client.getName();
+        income = client.getIncome();
+        birthDate = client.getBirthDate();
+        children = client.getChildren();
+        cpf = client.getCpf();
+        setAge(birthDate);
+        for ( Vehicle vehicle : vehicles){
+            vehiclesId.add(vehicle.getId());
+        }
     }
 
     public Long getId() {
@@ -94,8 +105,8 @@ public class ClientDTO {
         this.children = children;
     }
 
-    public Set<VehicleDTO> getVehicles() {
-        return vehicles;
+    public Set<Long> getVehiclesId() {
+        return vehiclesId;
     }
 
     public final Integer getAge() {

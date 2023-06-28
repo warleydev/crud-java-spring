@@ -28,7 +28,7 @@ public class ClientService {
         return repository.findAll(pageRequest);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Client findById(Long id){
         return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado!"));
     }

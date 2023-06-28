@@ -3,6 +3,7 @@ package com.warleydev.desafionelio.controllers;
 import com.warleydev.desafionelio.dto.ClientDTO;
 import com.warleydev.desafionelio.dto.ClientInsertDTO;
 import com.warleydev.desafionelio.dto.ClientUpdateDTO;
+import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.services.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,8 @@ public class ClientController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ClientDTO> findById(@PathVariable Long id){
-        ClientDTO dto = new ClientDTO(service.findById(id));
+        Client entity = service.findById(id);
+        ClientDTO dto = new ClientDTO(service.findById(id), entity.getVehicles());
         return ResponseEntity.ok(dto);
     }
 

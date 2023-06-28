@@ -24,7 +24,7 @@ public class Client {
     private Integer children;
     private Integer age;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private Set<Vehicle> vehicles = new HashSet<>();
 
     public Client(){
