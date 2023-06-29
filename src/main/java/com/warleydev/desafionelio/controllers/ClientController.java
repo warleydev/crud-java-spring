@@ -38,7 +38,7 @@ public class ClientController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<ClientDTO> findById(@PathVariable Long id){
         Client entity = service.findById(id);
-        ClientDTO dto = new ClientDTO(service.findById(id), entity.getVehicles());
+        ClientDTO dto = new ClientDTO(entity, entity.getVehicles());
         return ResponseEntity.ok(dto);
     }
 

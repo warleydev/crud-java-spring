@@ -3,11 +3,7 @@ package com.warleydev.desafionelio.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.entities.Vehicle;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Positive;
-import org.springframework.data.annotation.ReadOnlyProperty;
+import jakarta.validation.constraints.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -18,20 +14,21 @@ import java.util.Set;
 
 public class ClientDTO {
     private Long id;
-    @NotBlank
+    @NotBlank(message = "Você não tem nome? Este campo não pode estar vazio.")
     private String name;
 
-    @Positive
-    @NotNull
+    @PositiveOrZero(message = "Você está devendo por acaso? A renda não pode ser negativa.")
+    @NotNull(message = "Este campo não pode estar vazio.")
     private Double income;
     private Integer age;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Past
-    @NotNull
+    @Past(message = "Você nasceu depois de hoje? Insira uma data válida.")
+    @NotNull(message = "Você nunca nasceu? Este campo não pode estar vazio.")
     private Instant birthDate;
 
-    @NotNull
+    @PositiveOrZero(message = "Você tem filhos negativos? Insira um valor maior ou igual a 0")
+    @NotNull(message = "Este campo não pode estar vazio.")
     private Integer children;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -69,9 +66,7 @@ public class ClientDTO {
         children = client.getChildren();
         cpf = client.getCpf();
         setAge(birthDate);
-        for ( Vehicle vehicle : vehicles){
-            vehiclesId.add(vehicle.getId());
-        }
+        vehicles.forEach(x -> vehiclesId.add(x.getId()));
     }
 
     public Long getId() {
