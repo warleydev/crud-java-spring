@@ -2,6 +2,7 @@ package com.warleydev.desafionelio.services;
 
 import com.warleydev.desafionelio.dto.VehicleInsertDTO;
 import com.warleydev.desafionelio.dto.VehicleUpdateDTO;
+import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.entities.Vehicle;
 import com.warleydev.desafionelio.entities.enums.Color;
 import com.warleydev.desafionelio.repositories.ClientRepository;
@@ -11,6 +12,7 @@ import com.warleydev.desafionelio.services.exceptions.UnderageClientException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 import com.warleydev.desafionelio.services.utils.LicensePlateValidate;
 import com.warleydev.desafionelio.services.utils.ValidateObject;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,11 +53,18 @@ public class VehicleService {
 
     public VehicleUpdateDTO update(Long id, VehicleUpdateDTO updatedVehicle){
         if (repository.existsById(id)){
-            nullFieldVehicleUpdate(updatedVehicle);
-            clientCanHaveCar(updatedVehicle.getOwnerId());
-            Vehicle entity = findById(id);
-            saveVehicle(updatedVehicle, entity);
-            return updatedVehicle;
+            Long ownerId = updatedVehicle.getOwnerId();
+            if (clientRepository.existsById(ownerId)){
+                clientCanHaveCar(ownerId);
+                Vehicle entity = findById(id);
+                saveVehicle(updatedVehicle, entity);
+                return updatedVehicle;
+            }
+            else{
+                throw new ResourceNotFoundException("Cliente não encontrado! Id: "+ownerId);
+            }
+
+
         }
         else throw new ResourceNotFoundException("Id "+id+" não encontrado");
     }
@@ -69,7 +78,6 @@ public class VehicleService {
 
 
     public boolean vehicleValidate(VehicleInsertDTO dto){
-        ValidateObject.nullFieldVehicle(dto);
         if (!clientRepository.existsById(dto.getOwnerId())){
             throw new ResourceNotFoundException("Dono do veículo não encontrado! Id: "+ dto.getOwnerId());
         }
@@ -99,11 +107,11 @@ public class VehicleService {
 
     void saveVehicle(VehicleUpdateDTO dto, Vehicle entity){
         updateData(dto, entity);
-        entity = repository.saveAndFlush(entity);
+        entity = repository.save(entity);
     }
 
     void clientCanHaveCar(Long id){
-        if (clientRepository.findById(id).get().getAge() >= 18){
+        if (clientRepository.getReferenceById(id).getAge() >= 18){
             return;
         }
         throw new UnderageClientException("O cliente precisa ter ao menos 18 anos.");

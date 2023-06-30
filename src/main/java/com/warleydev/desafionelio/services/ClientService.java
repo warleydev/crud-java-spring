@@ -44,7 +44,6 @@ public class ClientService {
 
     public ClientUpdateDTO update(Long id, ClientUpdateDTO updatedDTO){
         if (repository.existsById(id)){
-            ValidateObject.nullFieldClientUpdate(updatedDTO);
             Client entity = findById(id);
 
             entity.setName(updatedDTO.getName());
@@ -67,10 +66,7 @@ public class ClientService {
 
 
     public boolean clientValidate(ClientInsertDTO dto){
-        ValidateObject.nullFieldClientInsert(dto);
-        if (dto.getBirthDate().isAfter(Instant.now())){
-            throw new InvalidBirthDateException("Por favor, insira uma data de nascimento válida!");
-        }
+
         cpfIsOk(dto.getCpf());
         return true;
     }

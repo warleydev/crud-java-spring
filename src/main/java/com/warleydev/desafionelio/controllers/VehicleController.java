@@ -5,6 +5,7 @@ import com.warleydev.desafionelio.dto.VehicleUpdateDTO;
 import com.warleydev.desafionelio.entities.Vehicle;
 import com.warleydev.desafionelio.dto.VehicleDTO;
 import com.warleydev.desafionelio.services.VehicleService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +42,7 @@ public class VehicleController {
     }
 
     @PostMapping
-    public ResponseEntity<VehicleInsertDTO> insert(@RequestBody VehicleInsertDTO dto){
+    public ResponseEntity<VehicleInsertDTO> insert(@RequestBody @Valid VehicleInsertDTO dto){
         dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -49,7 +50,8 @@ public class VehicleController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<VehicleUpdateDTO> update(@PathVariable Long id, @RequestBody VehicleUpdateDTO dto){
+    public ResponseEntity<VehicleUpdateDTO> update(@PathVariable Long id, @RequestBody @Valid VehicleUpdateDTO dto){
+        dto = service.update(id, dto);
         return ResponseEntity.noContent().build();
     }
 

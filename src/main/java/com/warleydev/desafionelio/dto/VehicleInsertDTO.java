@@ -1,8 +1,12 @@
 package com.warleydev.desafionelio.dto;
 
 import com.warleydev.desafionelio.entities.Vehicle;
+import jakarta.validation.constraints.NotBlank;
 
 public class VehicleInsertDTO extends VehicleDTO{
+
+    @NotBlank(message = "Carro sem nome?? Este campo não pode estar vazio.")
+    private String name;
 
     public VehicleInsertDTO(){
     }

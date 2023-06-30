@@ -3,12 +3,21 @@ package com.warleydev.desafionelio.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.entities.Vehicle;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public class VehicleDTO {
     private Long id;
+
     private String name;
+
+    @NotNull(message = "Cade a pintura do carro po? Este campo não pode estar vazio.")
     private Integer color;
+
+    @NotNull(message = "Este carro precisa possuir um dono.")
     private Long ownerId;
+
     private String licensePlate;
 
     public VehicleDTO(){
