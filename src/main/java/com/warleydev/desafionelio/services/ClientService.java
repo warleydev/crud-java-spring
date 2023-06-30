@@ -4,18 +4,14 @@ import com.warleydev.desafionelio.dto.ClientInsertDTO;
 import com.warleydev.desafionelio.dto.ClientUpdateDTO;
 import com.warleydev.desafionelio.entities.Client;
 import com.warleydev.desafionelio.repositories.ClientRepository;
-import com.warleydev.desafionelio.services.exceptions.InvalidBirthDateException;
 import com.warleydev.desafionelio.services.exceptions.InvalidCpfException;
 import com.warleydev.desafionelio.services.exceptions.ResourceNotFoundException;
 import com.warleydev.desafionelio.services.utils.IsCPF;
-import com.warleydev.desafionelio.services.utils.ValidateObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
 
 @Service
 public class ClientService {
@@ -34,7 +30,7 @@ public class ClientService {
     }
 
     public ClientInsertDTO insert(ClientInsertDTO dto){
-        if (clientValidate(dto)){
+        if (cpfIsOk(dto.getCpf())){
             Client entity = new Client();
             fromDto(dto, entity);
             return new ClientInsertDTO(repository.save(entity));
@@ -64,26 +60,16 @@ public class ClientService {
         else throw new ResourceNotFoundException("Id "+id+" não encontrado!");
     }
 
-
-    public boolean clientValidate(ClientInsertDTO dto){
-
-        cpfIsOk(dto.getCpf());
-        return true;
-    }
-
-    public boolean cpfAlreadyRegistered(String cpf){
-        return repository.existsByCpf(cpf);
-    }
-
-    public void cpfIsOk(String cpf){
+    public boolean cpfIsOk(String cpf){
         if (IsCPF.isValidcpf(cpf)) {
-            if (cpfAlreadyRegistered(cpf)) {
+            if (repository.existsByCpf(cpf)) {
                 throw new InvalidCpfException("CPF '" + cpf + "' já existe.");
             }
         }
         else {
             throw new InvalidCpfException("CPF '"+cpf+"' inválido!");
         }
+        return true;
     }
 
     public void fromDto(ClientInsertDTO dto, Client entity){

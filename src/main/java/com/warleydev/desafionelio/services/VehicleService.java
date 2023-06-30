@@ -61,10 +61,8 @@ public class VehicleService {
                 return updatedVehicle;
             }
             else{
-                throw new ResourceNotFoundException("Cliente não encontrado! Id: "+ownerId);
+                throw new ResourceNotFoundException("Dono do veículo não encontrado! Id: "+ownerId);
             }
-
-
         }
         else throw new ResourceNotFoundException("Id "+id+" não encontrado");
     }
@@ -98,9 +96,6 @@ public class VehicleService {
     }
 
     public void updateData(VehicleUpdateDTO dto, Vehicle entity){
-        if (!clientRepository.existsById(dto.getOwnerId())){
-            throw new ResourceNotFoundException("Dono do veículo não encontrado! Id: "+ dto.getOwnerId());
-        }
         entity.setColor(dto.getColor());
         entity.setOwner(clientRepository.getReferenceById(dto.getOwnerId()));
     }
